@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define OK 0
 #define ERREUR -1
@@ -80,16 +81,35 @@ int switch_raid5_off(virtual_disk_t *system);
 
 int switch_raid5_on(virtual_disk_t *system, char* dirname);
 
+/***
+ * 
+ * 
+ * 
+ * 
+*/
+
 unsigned compute_nblock(unsigned total_octal);
 
-int write_block(virtual_disk_t *system, block_t block, int diskid, int pos);
+char write_block(virtual_disk_t *system, block_t *block, int diskid, int *pos);
 
-int block_repair();
+char read_block(virtual_disk_t *system, block_t *block, int diskid, int pos);
+
+block_t block_repair(stripe_t s, unsigned numfailed);
 
 void afficher_block(block_t block);
+
+void init_stripe_t(virtual_disk_t *system, stripe_t *s, block_t *blocks, int ndata);
+
+unsigned compute_nstripe(virtual_disk_t *system, unsigned nblock);
 
 block_t compute_parity(stripe_t *s);
 
 int parity_index(stripe_t s);
+
+unsigned write_stripe(stripe_t *s, virtual_disk_t *raid, int pos);
+
+void dump_stripe(stripe_t s, FILE *output);
+
+inode_t *read_inodes_table(virtual_disk_t *system);
 
 #endif // __R5_DEFINES__
